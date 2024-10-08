@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet Dashboard</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px; /* Increased width */
+            margin: auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 20px; /* Added padding for better spacing */
+        }
+
+        header {
+            background-color: #28a745;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #333;
+            padding: 10px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #28a745;
+        }
+
+        .content {
+            padding: 20px;
+            display: none; /* Initially hide content */
+        }
+
+        .active {
+            display: block; /* Show active content */
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #28a745;
+            font-size: 24px;
+        }
+
+        form {
+            max-width: 600px; /* Increased form width */
+            margin: auto;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        form label {
+            margin-bottom: 10px;
+            display: block;
+            font-weight: bold;
+        }
+
+        form input,
+        form select,
+        form button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        form button {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        form button:hover {
+            background-color: #218838;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .calorie-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .calorie-list li {
+            background-color: #f4f4f4;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 5px solid #28a745;
+        }
+
+        /* Popup styling */
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            z-index: 1000;
+            width: 300px;
+            text-align: center;
+        }
+
+        .popup.active {
+            display: block; /* Show popup */
+        }
+
+        .popup button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .popup button:hover {
+            background-color: #218838;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column; /* Stack links vertically on smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Diet Dashboard</h1>
+            <p>Your guide to maintaining a healthy lifestyle</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav>
+            <ul>
+                <li><a href="#diet-plan" onclick="showContent('diet-plan')">Diet Plan</a></li>
+                <li><a href="#calorie-tracker" onclick="showContent('calorie-tracker')">Calorie Tracker</a></li>
+                <li><a href="#recommendations" onclick="showContent('recommendations')">Recommendations</a></li>
+                <li><a href="#food-page" onclick="showContent('food-page')">Add Food</a></li>
+                <li><a href="#payment-page" onclick="showContent('payment-page')">Payment</a></li>
+                <li><a href="#login" onclick="showContent('login')">Login</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="content" id="diet-plan">
+            <h2 class="page-title">Diet Plan</h2>
+            <form id="diet-form">
+                <label for="meal-type">Meal Type</label>
+                <select id="meal-type">
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                </select>
+
+                <label for="calories">Calories (Kcal)</label>
+                <input type="number" id="calories" required>
+
+                <button type="submit">Submit Diet Plan</button>
+            </form>
+        </div>
+
+        <div class="content" id="calorie-tracker">
+            <h2 class="page-title">Calorie Tracker</h2>
+            <p>Track your daily calorie intake:</p>
+            <ul id="calorie-list">
+                <li>No data yet. Add your first meal!</li>
+            </ul>
+        </div>
+
+        <div class="content" id="recommendations">
+            <h2 class="page-title">Recommendations</h2>
+            <p>Personalized suggestions to improve your diet:</p>
+            <ul>
+                <li>Include a variety of vegetables, fruits, whole grains, and protein-rich foods.</li>
+                <li>Limit intake of sugars and saturated fats.</li>
+                <li>Stay hydrated throughout the day by drinking water.</li>
+                <li>Practice portion control and eat mindfully.</li>
+                <li>Consider meal prepping to save time and ensure healthy choices.</li>
+                <li>Consult with a nutritionist for personalized diet plans.</li>
+            </ul>
+        </div>
+
+        <div class="content" id="food-page">
+            <h2 class="page-title">Add Food</h2>
+            <form id="food-form">
+                <label for="food-name">Food Name</label>
+                <input type="text" id="food-name" required>
+
+                <label for="food-calories">Calories (Kcal)</label>
+                <input type="number" id="food-calories" required>
+
+                <button type="submit">Add Food</button>
+            </form>
+            <ul id="food-list">
+                <li>No food added yet!</li>
+            </ul>
+        </div>
+
+        <div class="content" id="payment-page">
+            <h2 class="page-title">Payment</h2>
+            <form id="payment-form">
+                <label for="amount">Amount (in USD)</label>
+                <input type="number" id="amount" required>
+
+                <label for="payment-method">Payment Method</label>
+                <select id="payment-method">
+                    <option value="credit-card">Credit Card</option>
+                    <option value="paypal">PayPal</option>
+                </select>
+
+                <button type="submit">Pay Now</button>
+            </form>
+            <p id="payment-message"></p>
+        </div>
+
+        <div class="content" id="login">
+            <h2 class="page-title">Login</h2>
+            <form id="login-form">
+                <label for="username">Username:</label>
+                <input type="text" id="username" required placeholder="Enter Username">
+                <label for="password">Password:</label>
+                <input type="password" id="password" required placeholder="Enter Password">
+                <span id="error-message" style="color: red;"></span>
+                <button type="submit">Login</button>
+                                </button>
+            </form>
+        </div>
+
+        <!-- Popup for submission confirmation -->
+        <div class="popup" id="submission-popup">
+            <p>Data has been submitted!</p>
+            <button onclick="closePopup()">OK</button>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Balanced Diet Solution. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Store calorie data and food data in arrays
+        const calorieData = [];
+        const foodData = [];
+
+        // Show specific content based on the section clicked
+        function showContent(contentId) {
+            const contents = document.querySelectorAll('.content');
+            contents.forEach(content => {
+                content.style.display = 'none'; // Hide all contents
+            });
+            document.getElementById(contentId).style.display = 'block'; // Show selected content
+        }
+
+        // Handle login form submission
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const enteredUsername = document.getElementById('username').value;
+            const enteredPassword = document.getElementById('password').value;
+
+            // Replace with your login logic
+            if (enteredUsername === "udaykiran07" && enteredPassword === "1245") {
+                alert("Login Successful!");
+                showContent('diet-plan'); // Redirect to diet plan on successful login
+            } else {
+                document.getElementById('error-message').textContent = "Invalid username or password!";
+            }
+        });
+
+        // Handle diet form submission
+        document.getElementById('diet-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const mealType = document.getElementById('meal-type').value;
+            const calories = document.getElementById('calories').value;
+
+            // Store data in calorieData array
+            calorieData.push({ mealType, calories });
+            updateCalorieList(); // Update the calorie list
+
+            // Show popup for submission confirmation
+            document.getElementById('submission-popup').classList.add('active');
+
+            // Reset form
+            document.getElementById('diet-form').reset();
+        });
+
+        // Update the calorie list display
+        function updateCalorieList() {
+            const calorieList = document.getElementById('calorie-list');
+            calorieList.innerHTML = ''; // Clear current list
+
+            if (calorieData.length > 0) {
+                calorieData.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = `${item.mealType.charAt(0).toUpperCase() + item.mealType.slice(1)}: ${item.calories} Kcal`;
+                    calorieList.appendChild(li);
+                });
+            } else {
+                calorieList.innerHTML = '<li>No data yet. Add your first meal!</li>';
+            }
+        }
+
+        // Close the submission popup
+        function closePopup() {
+            document.getElementById('submission-popup').classList.remove('active');
+        }
+
+        // Handle food form submission
+        document.getElementById('food-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const foodName = document.getElementById('food-name').value;
+            const foodCalories = document.getElementById('food-calories').value;
+
+            // Store data in foodData array
+            foodData.push({ foodName, foodCalories });
+            updateFoodList(); // Update the food list
+
+            // Show popup for submission confirmation
+            document.getElementById('submission-popup').classList.add('active');
+
+            // Reset form
+            document.getElementById('food-form').reset();
+        });
+
+        // Update the food list display
+        function updateFoodList() {
+            const foodList = document.getElementById('food-list');
+            foodList.innerHTML = ''; // Clear current list
+
+            if (foodData.length > 0) {
+                foodData.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = `${item.foodName.charAt(0).toUpperCase() + item.foodName.slice(1)}: ${item.foodCalories} Kcal`;
+                    foodList.appendChild(li);
+                });
+            } else {
+                foodList.innerHTML = '<li>No food added yet!</li>';
+            }
+        }
+
+        // Handle payment form submission
+        document.getElementById('payment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amount = document.getElementById('amount').value;
+            const paymentMethod = document.getElementById('payment-method').value;
+
+            // Here you can add your payment processing logic
+            document.getElementById('payment-message').textContent = `Payment of $${amount} via ${paymentMethod} successful!`;
+
+            // Show popup for submission confirmation
+            document.getElementById('submission-popup').classList.add('active');
+
+            // Reset form
+            document.getElementById('payment-form').reset();
+        });
+
+        // Initially show the login content
+        showContent('login');
+    </script>
+</body>
+</html>
+
+
